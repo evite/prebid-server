@@ -706,8 +706,8 @@ func init() {
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("/etc/config")
 
-	viper.SetDefault("external_url", "http://localhost:8000")
-	viper.SetDefault("port", 8000)
+	viper.SetDefault("external_url", "http://localhost:8080")
+	viper.SetDefault("port", 8080)
 	viper.SetDefault("admin_port", 6060)
 	viper.SetDefault("default_timeout_ms", 250)
 	viper.SetDefault("cache.expected_millis", 10)
@@ -860,15 +860,15 @@ func serve(cfg *config.Configuration) error {
 	}
 
 	router := httprouter.New()
-	router.POST("/auction", (&auctionDeps{cfg}).auction)
-	router.POST("/openrtb2/auction", openrtbEndpoint)
-	router.GET("/bidders/params", NewJsonDirectoryServer(paramsValidator))
-	router.POST("/cookie_sync", cookieSync)
-	router.POST("/validate", validate)
-	router.GET("/status", status)
-	router.GET("/", serveIndex)
-	router.GET("/ip", getIP)
-	router.ServeFiles("/static/*filepath", http.Dir("static"))
+	router.POST("/_/prebid/auction", (&auctionDeps{cfg}).auction)
+	router.POST("/_/prebid/openrtb2/auction", openrtbEndpoint)
+	router.GET("/_/prebid/bidders/params", NewJsonDirectoryServer(paramsValidator))
+	router.POST("/_/prebid/cookie_sync", cookieSync)
+	router.POST("/_/prebid/validate", validate)
+	router.GET("/_/prebid/status", status)
+	router.GET("/_/prebid/", serveIndex)
+	router.GET("/_/prebid/ip", getIP)
+	router.ServeFiles("/_/prebid/static/*filepath", http.Dir("static"))
 
 	hostCookieSettings = pbs.HostCookieSettings{
 		Domain:       cfg.HostCookie.Domain,
